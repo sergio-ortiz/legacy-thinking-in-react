@@ -3,7 +3,7 @@ import React from "react";
 function ProductCategoryRow(props) {
   return (
     <tr>
-      <th>Category</th>
+      <th>{props.category}</th>
     </tr>
   );
 }

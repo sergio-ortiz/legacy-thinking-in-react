@@ -1,21 +1,32 @@
 import React from "react";
 import ProductRow from './ProductRow';
+import CategoryRow from './ProductCategoryRow';
 
 function ProductTable(props) {
-  const products = props.products;
+  let products = props.products;
+  const categories = props.categories
+  const productRows = [];
   const tableRows = [];
   if (Array.isArray(products)) {
-    console.log(products.map(p => p.category).sort((a, b) => b.charCodeAt() - a.charCodeAt()));
     products.forEach(product => {
-      tableRows.push(
+      productRows.push(
         <ProductRow 
           key={product.id} 
           title={product.title} 
           price={product.price} 
+          category={product.category}
         />
       )
-    })
-  }
+    });
+
+ 
+    if (Array.isArray(categories)) {
+      categories.forEach(category => {
+        const categoryRows = productRows.filter(row => row.props.category === category);
+        categoryRows.unshift(<CategoryRow key={category} category={category} />)
+        tableRows.push(...categoryRows);
+      })
+    } }
 
   return (
     <table>
