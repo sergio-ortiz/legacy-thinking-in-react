@@ -2,45 +2,40 @@ import React from "react";
 import ProductRow from './ProductRow';
 import CategoryRow from './ProductCategoryRow';
 
-function ProductTable(props) {
-  let products = props.products;
-  const categories = props.categories
-  const productRows = [];
-  const tableRows = [];
-  if (Array.isArray(products)) {
-    products.forEach(product => {
-      productRows.push(
-        <ProductRow 
-          key={product.id} 
-          title={product.title} 
-          price={product.price} 
-          category={product.category}
-        />
-      )
-    });
+class ProductTable extends React.Component {
+  render() {
+    let products = this.props.products;
+    const rows = [];
 
- 
-    if (Array.isArray(categories)) {
+    if (products.length) {
+      const categories = products
+        .map(product => product.category)
+        .filter((category, index, categories) => categories.indexOf(category) === index);
+
       categories.forEach(category => {
-        const categoryRows = productRows.filter(row => row.props.category === category);
-        categoryRows.unshift(<CategoryRow key={category} category={category} />)
-        tableRows.push(...categoryRows);
-      })
-    } }
+        const categorized = products
+          .filter(product => product.category === category)
+          .map(product => <ProductRow key={product.id} product={product} />)
 
-  return (
-    <table>
-      <thead>
-        <tr>
-          <th style={{textAlign: 'start'}}>Name</th>
-          <th style={{textAlign: 'start'}}>Price</th>
-        </tr>
-      </thead>
-      <tbody>
-        {tableRows}
-      </tbody>
-    </table>
-  );
+        categorized.unshift(<CategoryRow key={category} category={category} />)
+        rows.push(...categorized);
+      })
+    }
+
+    return (
+      <table>
+        <thead>
+          <tr>
+            <th style={{textAlign: 'start'}}>Name</th>
+            <th style={{textAlign: 'start'}}>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows}
+        </tbody>
+      </table>
+    );
+  }
 }
 
 export default ProductTable;
