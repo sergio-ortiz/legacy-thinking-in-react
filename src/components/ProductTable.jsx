@@ -8,6 +8,15 @@ class ProductTable extends React.Component {
     const rows = [];
 
     if (products.length) {
+      if (this.props.inStockOnly) {
+        products = products.filter(product => product.stock > 20);
+      }
+
+      if (this.props.filterText) {
+        const regex = new RegExp(this.props.filterText, 'ig');
+        products = products.filter(product => regex.test(`${product.title} ${product.category} ${product.brand} ${product.description}`));
+      }
+
       const categories = products
         .map(product => product.category)
         .filter((category, index, categories) => categories.indexOf(category) === index);
